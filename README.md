@@ -1,6 +1,6 @@
 
 
-### What stores/websites are supported?
+### Websites
 
 Currently, the following stores are supported:
 * Amazon (fails at low interval rates, see [proxies](#Proxies))
