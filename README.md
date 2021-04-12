@@ -1,0 +1,133 @@
+
+
+### What stores/websites are supported?
+
+Currently, the following stores are supported:
+* Amazon (fails at low interval rates, see [proxies](#Proxies))
+* Argos (UK. Does not currently work with proxies) (For PS5, use product link. Disc: https://www.argos.co.uk/product/8349000, Digital: https://www.argos.co.uk/product/8349024)
+* Currys (UK)
+* Ebuyer (UK)
+* Tesco (UK. Does not currently work with proxies) (For PS5, use this link: https://www.tescopreorders.com/uk/ps5)
+
+
+
+
+## Prerequisites
+0. A Terminal: ([cmd](https://en.wikipedia.org/wiki/Cmd.exe) (Windows), [Terminal](https://en.wikipedia.org/wiki/Terminal_(macOS)) (macOS), or [Console](https://en.wikipedia.org/wiki/Linux_console) (Linux))
+1. Install [Node.js](https://nodejs.org/en/), either LTS or Current.
+2. Clone or [download](https://github.com/PrinceS25/StockAlertBot/archive/main.zip) this repository
+    `git clone https://github.com/PrinceS25/StockAlertBot.git`
+3. Go to root directory
+    `cd StockAlertBot`
+4. Install npm packages via a terminal
+    `npm install`
+
+
+## Usage
+There are only two steps to use this program: 1) enter information and 2) launch the program.
+
+1. You can now enter information using two ways: via a browser (recommended) or a text editor.
+    #### Via Browser
+    1. At the root directory, run on the terminal:
+        `npm run settings`\
+        A browser window should open up. If it doesn't and the console says `Server started!`, go to: `http://localhost:3250/` in your browser.
+    2. Enter the links of the items you want to track in the URLs tab.
+    3. Go to Settings tab and change to your heart's content.
+        - If you want to use Proxies, turn it on and create a file called `proxies.txt` in the root directory and fill it with one proxy per line. See [proxies](#Proxies).
+        - If you have Amazon link(s), you will see a options to put delay between Amazon items and pick a region. Select a region if you want to only monitor items sold by Amazon and not third party sellers. If you want to use a particular seller or if your region is not in the list, select `Custom` and provide the merchant ID. See [Feedback and Support](#Feedback-and-Support) if you'd like to request a region.
+        - If you have Target link(s), you will see additional options to put zip code and API Key. Only change the key if you get API key errors. Refer to the instructions in the following [section](#Via-Text-Editor).
+    4. Configure notification options in Optional tab.
+        - If you want notifications sent to [Discord](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks), [IFTTT](https://maker.ifttt.com/), or [Slack](https://api.slack.com/messaging/webhooks), expand WEBHOOKS and enter the webhook URL(s) there.
+        - If you want notification sent via SMS/Text, expand SMS and choose a method: Amazon Web Services, Email, or Twilio. See [SMS](#SMS).
+        - If you want notifications sent to Email, turn on email and enter your service provider information. Some providers (Yahoo, AOL, AT&T) cause problems. Refer to this [section](#Email).
+    5. Once you're happy with the settings, click `Save Settings`.\
+    `config.json` and `.env` files should now reflect your settings.\
+    You can use `CTRL + C` or `CMD + C` to stop the program.<br><br>
+
+    #### Via Text Editor 
+    Open and edit `config.json`
+    1. Add urls of products in the `URLS` array
+    2. Change the `INTERVAL` to suit your desires.\
+    **WARNING:** Having the interval too low might have negative consquences such as this program being detected as a bot (Amazon), or blocking your IP from accessing the website. See [proxies](#Proxies).
+    3. Set `OPEN_URL` to false if you don't want the application to automatically open urls when item is in stock
+    4. Set `ALARM` to false if you want to disable the audible warning
+    5. Optional Settings.
+        1. **If** you're planning to track more than one Amazon item, set the delay (in seconds) between items by editing `AMAZON_DELAY`.
+        Otherwise, Amazon may flag the program's requests as a bot. You can also set a merchant ID in `AMAZON_MERCHANT_ID` to only get prices from a ceratin merchant. The other [method](#Via-Browser) allows you to select pre-configured IDs items only sold by Amazon depending on the region.
+        2. **If** you're planning to track Target item(s), enter your zip code in `TARGET_ZIP_CODE`.\
+        **NOTE:** If you encounter an error relating to API Key, you need to get this key yourself:
+            1. Go to target.com with the DevTools (Chrome) or Developer Tools (Firefox) open (Google or ask if you're unsure how)
+            2. On the console, you should see GET requests as you load the page.\
+            In DevTools, you have to click the gear and check "Log XMLHttpRequests" to see them
+            3. Click on any of the urls that has the string "key=" and copy the whole key
+            4. Paste it to `TARGET_KEY`
+        3. **If** you want to send alerts to webhook URL(s) like [Discord](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks), [IFTTT](https://ifttt.com/maker_webhooks/), or [Slack](https://api.slack.com/messaging/webhooks), add them to `WEBHOOK_URLS` array.
+        4. **If** you want to use Proxies, change `PROXIES` to `true` and create a file called `proxies.txt` in the root directory and fill it with one proxy per line. See [proxies](#Proxies).
+        5. **If** you want to send alerts to SMS, change `SMS_METHOD` to either "Email", "Amazon Web Services", or "Twilio". Then change the associated values in `.env`. See [SMS](#SMS).
+        6. **If** you want to send alerts to email, change `EMAIL` in `config.json` to `true`. Make a copy of `example.env` and rename it to `.env`. Inside `.env`, type out one of the service providers (`EMAIL_SERVICE`) listed in [Email](#Email), your email (`EMAIL_FROM`) and password (`EMAIL_PASS`) and the email you want alerts sent to (`EMAIL_TO`). All without quotes.
+        
+2. Execute and continue about your day: 
+    `npm start` OR `node --experimental-modules main.js`\
+    You can use `CTRL + C` or `CMD + C` to stop the program.
+
+
+### Email
+Supported email providers:
+```
+    Gmail, Yahoo, iCloud, Hotmail, Outlook365, QQ, 126, 163, 1und1, AOL, DebugMail, DynectEmail, 
+    FastMail, GandiMail, Godaddy, GodaddyAsia, GodaddyEurope, hot.ee, mail.ee, Mail.ru, Maildev, Mailgun, Mailjet, 
+    Mailosaur, Mandrill, Naver, OpenMailBox, Postmark, QQex, SendCloud, SendGrid, SendinBlue, SendPulse, SES, 
+    SES-US-EAST-1, SES-US-WEST-2, SES-EU-WEST-1, Sparkpost, Yandex, Zoho, qiye.aliyun
+```
+
+**NOTE:**  If you receive the error: `535 5.7.0 (#AUTH005) Too many bad auth attempts`, most likely you are using Yahoo for the email server or an email server managed by Yahoo, such as AOL or AT&T. Yahoo has implemented an option that by default, does not let 3rd party products access the email servers. To resolve, go to https://login.yahoo.com/account/security and then enable the option to allow apps that use less secure sign in. Use the password generated by "Generate app password". If you are using AOL, do the same thing, from https://login.aol.com/account/security.
+<br><br>
+
+
+### SMS
+SMS / Text support is now available via Amazon Web Services, Email, or Twilio. This, however, requires some setup on your part. Read below regarding setup for each method:
+
+- **[Amazon Web Services](https://aws.amazon.com/sns)**\
+First, read pricing information [here](https://aws.amazon.com/sns/faqs/#SMS_pricing). First 100 SMS are free for each month as long as you send them to a United States destination. For this method, you will need:
+    - Region
+    - Access Key
+    - Secret Access Key
+    - Phone Number
+
+    Region is Amazon server you want to send from. It's probably best to choose one closest to you. More information [here](https://docs.aws.amazon.com/sns/latest/dg/sns-supported-regions-countries.html).\
+    Access Key and Secret Access Key can be obtained following instructions in this [tutorial](https://medium.com/codephilics/how-to-send-a-sms-using-amazon-simple-notification-service-sns-46208d82abcc).\
+    Phone number is the number to send SMS to. You will need to include country code and area code. Country code information can be found [here](https://countrycode.org/).
+
+- **Email**\
+**FREE** but limited. Uses email to send text via phone carrier's [SMS gateway](https://en.wikipedia.org/wiki/SMS_gateway). Mostly the same setup as [Email](#Email).\
+Currently supported carriers: Alltel, AT&T, Boost Mobil, Cricket Wireless, FirstNet, Google Project Fi, MetroPCS, Republic Wireless, Sprint, Straight Talk, T-Mobile, Ting, U.S. Cellular, Verizon Wireless, Virgin Mobile.\
+If you'd like to request a carrier, please refer to [Feedback and Support](#Feedback-and-Support) and provide your carrier's SMS gateway if possible.
+
+- **[Twilio](https://www.twilio.com/sms)**\
+First, read pricing information [here](https://www.twilio.com/sms/pricing). You get some free starting balance with which you can buy a Twilio phone number. For this method, you will need:
+    - Twilio Account SID
+    - Twilio Auth Token
+    - Twilio Phone Number
+    - Phone Number
+
+    The first three can easily be obtained from the [Twilio console](https://www.twilio.com/console) after you make a Twilio account.\
+    Phone number is the number to send SMS to. You will need to include country code and area code. Country code information can be found [here](https://countrycode.org/).
+<br><br>
+
+
+### Proxies
+If you plan to use low interval rates OR track several items from one store, it is highly recommended that you use proxies such as ones from [Webshare](https://www.webshare.io/) in the format `ip:port` for IP-based authentication or `username:password@ip:port`.<br>\
+**NOTE:** The following stores do not currently with proxies due to them blocking some connections/headers which results in inconsistent connection: Argos, Best Buy, Costco, and Tesco. Thus we thought it'd be best if we take off proxy support for now until we can do some further research or find an alternative way.
+<br><br>
+
+
+## Screenshots
+![Screenshot of URLs](https://i.imgur.com/FVrmKNA.png)<br><br>
+---
+<br><br>![Screenshot of Settings](https://i.imgur.com/ue3Pdlv.png)<br><br>
+---
+<br><br>![Screenshot of Optional](https://i.imgur.com/w7xkXIw.png)
+
+
+
+
