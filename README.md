@@ -43,28 +43,6 @@ There are only two steps to use this program: 1) enter information and 2) launch
     5. Once you're happy with the settings, click `Save Settings`.\
     `config.json` and `.env` files should now reflect your settings.\
     You can use `CTRL + C` or `CMD + C` to stop the program.<br><br>
-
-    #### Via Text Editor 
-    Open and edit `config.json`
-    1. Add urls of products in the `URLS` array
-    2. Change the `INTERVAL` to suit your desires.\
-    **WARNING:** Having the interval too low might have negative consquences such as this program being detected as a bot (Amazon), or blocking your IP from accessing the website. See [proxies](#Proxies).
-    3. Set `OPEN_URL` to false if you don't want the application to automatically open urls when item is in stock
-    4. Set `ALARM` to false if you want to disable the audible warning
-    5. Optional Settings.
-        1. **If** you're planning to track more than one Amazon item, set the delay (in seconds) between items by editing `AMAZON_DELAY`.
-        Otherwise, Amazon may flag the program's requests as a bot. You can also set a merchant ID in `AMAZON_MERCHANT_ID` to only get prices from a ceratin merchant. The other [method](#Via-Browser) allows you to select pre-configured IDs items only sold by Amazon depending on the region.
-        2. **If** you're planning to track Target item(s), enter your zip code in `TARGET_ZIP_CODE`.\
-        **NOTE:** If you encounter an error relating to API Key, you need to get this key yourself:
-            1. Go to target.com with the DevTools (Chrome) or Developer Tools (Firefox) open (Google or ask if you're unsure how)
-            2. On the console, you should see GET requests as you load the page.\
-            In DevTools, you have to click the gear and check "Log XMLHttpRequests" to see them
-            3. Click on any of the urls that has the string "key=" and copy the whole key
-            4. Paste it to `TARGET_KEY`
-        3. **If** you want to send alerts to webhook URL(s) like [Discord](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks), [IFTTT](https://ifttt.com/maker_webhooks/), or [Slack](https://api.slack.com/messaging/webhooks), add them to `WEBHOOK_URLS` array.
-        4. **If** you want to use Proxies, change `PROXIES` to `true` and create a file called `proxies.txt` in the root directory and fill it with one proxy per line. See [proxies](#Proxies).
-        5. **If** you want to send alerts to SMS, change `SMS_METHOD` to either "Email", "Amazon Web Services", or "Twilio". Then change the associated values in `.env`. See [SMS](#SMS).
-        6. **If** you want to send alerts to email, change `EMAIL` in `config.json` to `true`. Make a copy of `example.env` and rename it to `.env`. Inside `.env`, type out one of the service providers (`EMAIL_SERVICE`) listed in [Email](#Email), your email (`EMAIL_FROM`) and password (`EMAIL_PASS`) and the email you want alerts sent to (`EMAIL_TO`). All without quotes.
         
 2. Execute and continue about your day: 
     `npm start` OR `node --experimental-modules main.js`\
@@ -113,21 +91,3 @@ First, read pricing information [here](https://www.twilio.com/sms/pricing). You 
     The first three can easily be obtained from the [Twilio console](https://www.twilio.com/console) after you make a Twilio account.\
     Phone number is the number to send SMS to. You will need to include country code and area code. Country code information can be found [here](https://countrycode.org/).
 <br><br>
-
-
-### Proxies
-If you plan to use low interval rates OR track several items from one store, it is highly recommended that you use proxies such as ones from [Webshare](https://www.webshare.io/) in the format `ip:port` for IP-based authentication or `username:password@ip:port`.<br>\
-**NOTE:** The following stores do not currently with proxies due to them blocking some connections/headers which results in inconsistent connection: Argos, Best Buy, Costco, and Tesco. Thus we thought it'd be best if we take off proxy support for now until we can do some further research or find an alternative way.
-<br><br>
-
-
-## Screenshots
-![Screenshot of URLs](https://i.imgur.com/FVrmKNA.png)<br><br>
----
-<br><br>![Screenshot of Settings](https://i.imgur.com/ue3Pdlv.png)<br><br>
----
-<br><br>![Screenshot of Optional](https://i.imgur.com/w7xkXIw.png)
-
-
-
-
